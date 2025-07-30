@@ -92,13 +92,13 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias nvim="/home/dkong/Downloads/nvim-linux-x86_64/bin/nvim"
+alias nvim="/home/potato/Downloads/nvim-linux-x86_64/bin/nvim"
 alias ls='ls -a --color'
-alias run-d='sudo /home/dkong/config/devenv/docker/run_docker2004.sh'
-alias work='cd /home/dkong/config/'
+alias run-d='sudo /home/potato/config/devenv/docker/run_docker2204.sh'
+alias work='cd /home/potato/work/config/'
 alias please='sudo'
 #alias cat='bat'
-alias ispfw-docker-clone='docker exec -it ispfw-devenv-2004 bash'
+alias ispfw-docker-clone='docker exec -it ispfw-devenv-2204 bash'
 alias start-dockerd='sudo systemctl start docker'
 
 # Add an "alert" alias for long running commands.  Use like so:
@@ -911,3 +911,33 @@ if [[ "${BASH_VERSINFO[0]}" -eq 4 && "${BASH_VERSINFO[1]}" -ge 4 || "${BASH_VERS
 else
     complete -F _starship -o bashdefault -o default starship
 fi
+
+push() {
+    if [ -d $(pwd)/.git ] || [ -L $(pwd)/.git ]; then
+
+        branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+        if [ $? -eq 0 ]; then
+
+            echo -e "you are currently on \e[1;4;32m$branch\e[0m"
+
+            read -p "Do you wish to proceed? (Y or branch-name) : " branch_name
+
+            # Use default if input is empty
+            branch_name=${branch_name:-$branch}
+
+            echo -e "okay. pushing to \e[1;4;32m$branch_name\e[0m!..."
+
+            echo -e "\e[3;32mgit push origin HEAD:refs/for/$branch_name\e[0m"
+            git push origin HEAD:refs/for/$branch_name
+
+        else
+            echo -e "this is \e[1;4;31mNOT\e[0m a git repo..."
+        fi
+
+        # echo -e "you are currently on \e[1;4;32m$(git branch)\e[0m"
+
+    else
+        echo -e "this is \e[1;4;31mNOT\e[0m a git repo..."
+    fi
+}
